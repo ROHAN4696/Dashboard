@@ -8,9 +8,10 @@ def load_data():
     df = pd.read_csv(f"{path}/netflix_titles.csv")
     return df
 
-st.title("Netflix Dataset Viewer")
 df = load_data()
-st.dataframe(df.head())
+
+st.session_state["netflix_df"] = df
+st.title("Netflix Dataset Viewer")
 
 pages = [
    st.Page("./tab1.py", title="Executive Overview"),
