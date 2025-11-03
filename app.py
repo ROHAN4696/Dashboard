@@ -1,12 +1,25 @@
 import streamlit as st
+import pandas as pd
+import kagglehub
+
+@st.cache_data
+def load_data():
+    path = kagglehub.dataset_download("shivamb/netflix-shows")
+    df = pd.read_csv(f"{path}/netflix_titles.csv")
+    return df
+
+st.title("Netflix Dataset Viewer")
+df = load_data()
+st.dataframe(df.head())
+
 pages = [
-   st.Page("./tab1.py", title="Tab 1", icon="📄"),
-   st.Page("./tab2.py", title="Tab 2", icon="📊"),
-   st.Page("./tab3.py", title="Tab 3", icon="📊"),
-   st.Page("./tab4.py", title="Tab 4", icon="📊"),
-   st.Page("./tab5.py", title="Tab 5", icon="📊"),
-   st.Page("./tab6.py", title="Tab 6", icon="📊"),
-   st.Page("./tab7.py", title="Tab 7", icon="📊"),
+   st.Page("./tab1.py", title="Executive Overview"),
+   st.Page("./tab2.py", title="Content Explorer"),
+   st.Page("./tab3.py", title="Trend Intelligence"),
+   st.Page("./tab4.py", title="Geographic Insights"),
+   st.Page("./tab5.py", title="Genre and Category Intelligence"),
+   st.Page("./tab6.py", title="Creator & Talent Hub"),
+   st.Page("./tab7.py", title="Strategic Recommendations"),
 ]
 
 nav = st.navigation(pages, position="sidebar", expanded=True)
