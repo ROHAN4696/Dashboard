@@ -11,7 +11,6 @@ def load_data():
 df = load_data()
 
 st.session_state["netflix_df"] = df
-st.title("Netflix Dataset Viewer")
 
 pages = [
    st.Page("./tab1.py", title="Executive Overview"),
