@@ -48,7 +48,7 @@ fig_bar = px.bar(
     y='count',
     color='type',
     barmode='group',  # side-by-side bars; use 'stack' for stacked view
-    title='📊 Year-on-Year Content Production (Movies vs TV Shows)',
+    title=' Year-on-Year Content Production (Movies vs TV Shows)',
     labels={'release_year': 'Release Year', 'count': 'Number of Releases', 'type': 'Type'},
     color_discrete_sequence=px.colors.qualitative.Set2
 )
