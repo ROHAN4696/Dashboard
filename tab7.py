@@ -129,10 +129,10 @@ st.markdown(netflix_theme_css, unsafe_allow_html=True)
 # --- Dashboard Content ---
 
 # 1. Main Title
-st.title("Strategic Recommendations")
+st.markdown("<h1 style='color:white; font-weight:900; text-align:center; padding-top:20px; padding-bottom:20px;'>Strategic Recommendations</h1>", unsafe_allow_html=True)
 
 # --- SECTION 1: Market & Retention Strategies (4 Cards) ---
-st.subheader("Market & Retention Strategies")
+st.markdown("<h2 style='color:white; font-weight:900; margin-top:40px;'>Market & Retention Strategies</h2>", unsafe_allow_html=True)
 
 # Define the data for this section
 strategies_market = [
@@ -166,7 +166,7 @@ for i, col in enumerate(cols_market):
         """, unsafe_allow_html=True)
 
 # --- SECTION 2: High-Value Acquisition Targets (3 Cards) ---
-st.subheader("High-Value Acquisition Targets")
+st.markdown("<h2 style='color:white; font-weight:900; margin-top:40px;'>High-Value Acquisition Targets</h2>", unsafe_allow_html=True)
 
 # Define the data for this section
 strategies_acquisition = [
@@ -196,7 +196,7 @@ for i, col in enumerate(cols_acq):
         """, unsafe_allow_html=True)
 
 # --- SECTION 3: Core Corporate & Financial Directives (2 Cards) ---
-st.subheader("Core Corporate & Financial Directives")
+st.markdown("<h2 style='color:white; font-weight:900; margin-top:40px;'>Core Corporate & Financial Directives</h2>", unsafe_allow_html=True)
 
 # Define the data for this section
 strategies_corporate = [
