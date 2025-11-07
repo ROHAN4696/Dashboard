@@ -22,7 +22,7 @@ st.markdown("""
     max-width: 280px !important;
 
     /* Styling: Red Background, Rounded Corners */
-    background-color: #FF0000 !important;
+    background-color: #000000 !important;
     border-radius: 15px !important;
     border: none;
     
@@ -133,7 +133,7 @@ pages = [
     st.Page("./tab2.py", title="Content Explorer"),
     st.Page("./tab3.py", title="Trend Intelligence"),
     st.Page("./tab4.py", title="Geographic Insights"),
-    st.Page("./tab5.py", title="Genre and Category Intelligence"),
+    st.Page("./tab5.py", title="Genre Intelligence"),
     st.Page("./tab6.py", title="Creator & Talent Hub"),
     st.Page("./tab7.py", title="Strategic Recommendations"),
 ]

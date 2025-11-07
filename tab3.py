@@ -277,7 +277,7 @@ avg_lag_yearly = (
     .sort_values('year_added')
 )
 
-red_shades_lag = ['#FF4C4C', '#B22222'] 
+red_shades_lag = ['#FF4C4C', "'#B22222'"] 
 
 fig_lag = px.line(
     avg_lag_yearly,

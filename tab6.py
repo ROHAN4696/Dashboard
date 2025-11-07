@@ -1,6 +1,9 @@
 import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import os 
 
 # --- 1. Configuration (MUST be the first command) ---
 st.set_page_config(layout="wide") 
@@ -168,3 +171,4 @@ st.dataframe(
     filtered_cast_df[['title', 'type', 'release_year', 'country', 'listed_in']].reset_index(drop=True),
     use_container_width=True
 )
+

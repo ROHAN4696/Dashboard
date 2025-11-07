@@ -133,16 +133,10 @@ def get_origin(country):
 df_pre_origin['content_origin'] = df_pre_origin['primary_country'].apply(get_origin)
 df_pre_origin = df_pre_origin.dropna(subset=['content_origin']) # Drop titles with no clear origin
 
-st.markdown(
-    """
-    <h2 style='text-align: center; color: red; font-weight: bold;'>
-Netflix Titles by Country</h2>
-    """, 
-    unsafe_allow_html=True
-)
+
 
 # -----------------------------
-# 🗺️ Graph 1: Netflix Titles by Country (Choropleth)
+#   Graph 1: Netflix Titles by Country (Choropleth)
 # -----------------------------
 fig1 = px.choropleth(
     country_counts,
@@ -152,7 +146,6 @@ fig1 = px.choropleth(
     hover_name='country',
     color_continuous_scale='Reds',
 )
-# # Ensure map height is set and title is centered
 # fig1.update_layout(margin=dict(l=0,r=0,t=50,b=0), height=500, title_x=0.5) 
 # fig1 = update_fig_style(fig1, 'Netflix Titles by Country')
 # st.plotly_chart(fig1, use_container_width=True)
@@ -167,12 +160,15 @@ fig1 = px.choropleth(
 # st.markdown("---")
 
 # -----------------------------
-# 🗺️ Graphs 2 & 3: Scatter Geo for Movies/TV Shows (Side-by-Side)
+#   Graphs 2 & 3: Scatter Geo for Movies/TV Shows (Side-by-Side)
 # -----------------------------
+# --- Title 1: Content Distribution by Type Across the Globe ---
 st.markdown(
     """
-    <h2 style='text-align: center; color: red; font-weight: bold;'>
+    <div style='background-color: red; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
+    <h2 style='color: white; font-weight: bold; margin: 0;'>
 Content Distribution by Type Across the Globe</h2>
+    </div>
     """, 
     unsafe_allow_html=True
 )
@@ -216,11 +212,137 @@ with col_b:
 st.markdown("---")
 
 # ----------------------------------------------------
+#2nd map
+#2nd map
 
+# STREAMLIT PAGE SETTINGS
+# st.set_page_config(layout="wide", page_title="Netflix Country & Genre Map") # This line is redundant if page config is set at the top
 
+# --- Title 2: Netflix Content Distribution Map (Movies vs TV Shows + Top Genre) ---
 st.markdown(
     """
-    <h2 style='text-align: center; color: red; font-weight: bold;'>International vs. Domestic Content Analysis</h2>
+    <div style='background-color: red; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
+    <h2 style='color: white; font-weight: bold; margin: 0;'>
+Netflix Content Distribution Map (Movies vs TV Shows + Top Genre)</h2>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
+
+# LOAD DATA (The data loading here is technically redundant if already loaded but kept for context)
+df = df.dropna(subset=['country', 'type', 'listed_in'])
+
+# FIX MULTIPLE COUNTRIES
+df = df.assign(country=df['country'].str.split(', ')).explode('country')
+df['country'] = df['country'].str.strip()
+
+
+df["genre_list"] = df["listed_in"].str.split(",").apply(lambda x: [i.strip() for i in x])
+
+genre_dummies = (
+    df["genre_list"]
+    .explode()
+    .str.get_dummies()
+    .groupby(level=0)
+    .sum()
+)
+
+df = df.join(genre_dummies)
+
+genre_cols = genre_dummies.columns.tolist()
+if len(genre_cols) == 0:
+    st.error("⚠ No valid genre columns created — please check data!")
+    st.stop()
+
+
+# SPLIT MOVIES / TV SHOWS
+movies_df = df[df['type'] == "Movie"].copy()
+tv_df = df[df['type'] == "TV Show"].copy()
+
+
+# CALCULATE % PER COUNTRY (relative to type total)
+movies_pct = movies_df['country'].value_counts(normalize=True).reset_index()
+movies_pct.columns = ['country', 'percentage']
+movies_pct['percentage'] *= 100
+
+tv_pct = tv_df['country'].value_counts(normalize=True).reset_index()
+tv_pct.columns = ['country', 'percentage']
+tv_pct['percentage'] *= 100
+
+
+# FIND COUNTRY → TOP GENRE FOR MOVIES / TV
+def get_top_genre(df_):
+    grouped = df_.groupby("country")[genre_cols].sum()
+    top = grouped.idxmax(axis=1)
+    return top.reset_index().rename(columns={0: "top_genre"})
+
+
+movies_top = get_top_genre(movies_df)
+tv_top = get_top_genre(tv_df)
+
+movies_final = movies_pct.merge(movies_top, on="country", how="left")
+tv_final = tv_pct.merge(tv_top, on="country", how="left")
+
+
+# COLOR MAP FOR GENRES
+color_map = {
+    g: px.colors.qualitative.Bold[i % len(px.colors.qualitative.Bold)]
+    for i, g in enumerate(genre_cols)
+}
+
+
+# MOVIE MAP
+fig_movies = px.scatter_geo(
+    movies_final,
+    locations="country",
+    locationmode="country names",
+    size="percentage",
+    color="top_genre",
+    hover_name="country",
+    hover_data={"percentage": ":.2f", "top_genre": True},
+    projection="natural earth",
+    title=" Movies: % of Titles & Top Genre by Country",
+    color_discrete_map=color_map
+)
+fig_movies.update_layout(
+    margin=dict(l=0, r=0, t=50, b=0),
+    geo=dict(showframe=False, showcoastlines=True),
+)
+
+
+# TV SHOW MAP
+fig_tv = px.scatter_geo(
+    tv_final,
+    locations="country",
+    locationmode="country names",
+    size="percentage",
+    color="top_genre",
+    hover_name="country",
+    hover_data={"percentage": ":.2f", "top_genre": True},
+    projection="natural earth",
+    title=" TV Shows: % of Titles & Top Genre by Country",
+    color_discrete_map=color_map
+)
+fig_tv.update_layout(
+    margin=dict(l=0, r=0, t=50, b=0),
+    geo=dict(showframe=False, showcoastlines=True),
+)
+
+
+# DISPLAY SIDE-BY-SIDE
+col1, col2 = st.columns(2)
+with col1:
+    st.plotly_chart(fig_movies, use_container_width=True)
+
+with col2:
+    st.plotly_chart(fig_tv, use_container_width=True)
+
+# --- Title 3: International vs Domestic content Analysis ---
+st.markdown(
+    """
+    <div style='background-color: red; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
+    <h2 style='color: white; font-weight: bold; margin: 0;'>International vs. Domestic Content Analysis</h2>
+    </div>
     """, 
     unsafe_allow_html=True
 )
@@ -348,3 +470,100 @@ with col3:
     st.plotly_chart(fig6, use_container_width=True)
 with col4:
     st.plotly_chart(fig7, use_container_width=True)
+
+
+
+
+# Set the page title/layout for the Streamlit app
+st.set_page_config(layout="wide")
+
+# -----------------------------
+
+
+# -----------------------------
+# Compute top 10 countries + Others
+# -----------------------------
+# Using dfn, consistent with the initial load step
+all_count1 = df['country'].value_counts()
+
+# Ensure we have at least 11 countries to perform the split, otherwise handle gracefully
+if len(all_count1) > 10:
+    mcpctrs1 = all_count1.head(10).copy()       # top 10
+    mcpctrs1['Others'] = all_count1.iloc[10:].sum() # sum of remaining
+else:
+    mcpctrs1 = all_count1.copy()
+
+# Convert the Series to a DataFrame for Plotly Express
+df_pie = mcpctrs1.reset_index()
+df_pie.columns = ['Country', 'Count']
+
+
+# -----------------------------
+# Updated Red-to-Brown Color scheme
+# -----------------------------
+new_colors_red_brown = [
+    '#E50914',  # Bright Red
+    '#B20710',  # Darker Red
+    '#800000',  # Maroon
+    '#A52A2A',  # Brown
+    '#CD853F',  # Peru (Medium Brown)
+    '#D2B48C',  # Tan (Lighter Brown)
+    '#F5DEB3',  # Wheat (Lightest Brown)
+    '#DEB887',  # BurlyWood
+    '#BC8F8F',  # RosyBrown
+    '#A9A9A9',  # Dark Gray (for later slices)
+    '#696969'   # Dim Gray (for 'Others')
+]
+
+# Select only the colors needed, based on the number of slices
+colors_for_plot = new_colors_red_brown[:len(df_pie)]
+
+
+# -----------------------------
+# Create Plotly Donut chart (added hole=0.3 and increased height)
+# -----------------------------
+fig = px.pie(
+    df_pie,
+    values='Count',
+    names='Country',
+    title='Content Distribution by Country (Top 10 + Others)',
+    color_discrete_sequence=colors_for_plot,
+    height=700, # Height remains 450
+    hole=0.3    # Added hole for donut chart
+)
+
+# Apply Styling (changed border color to white)
+fig.update_traces(
+    textinfo='percent+label',
+    rotation=90,
+    # Set the wedge properties (white edge border)
+    marker=dict(line=dict(color='#FFFFFF', width=2)),
+    # Set the text color and style for better visibility (white, bold)
+    textfont=dict(color="#FFFFFF", size=10, family="sans-serif", weight='bold'),
+    textposition='inside',
+    # **MODIFICATION: Increase the radius of the circle**
+    # Domain controls the chart area [xmin, xmax], [ymin, ymax] from 0 to 1.
+    # Increasing max values (e.g., to 0.95) makes the chart bigger within the plot area.
+    domain={'x': [0.05, 0.95], 'y': [0.05, 0.95]} 
+)
+
+fig.update_layout(
+
+    title_font_color="#FF0000",
+    title_font_size=20,
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    legend_title_text='Country',
+    legend=dict(
+        orientation="v",
+        yanchor="top",
+        y=1,
+        xanchor="left",
+        x=1.05
+    )
+)
+
+# -----------------------------
+# Display in Streamlit
+# -----------------------------
+st.plotly_chart(fig, use_container_width=True)

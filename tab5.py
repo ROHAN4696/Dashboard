@@ -361,17 +361,5 @@ if df_adv is not None and not monthly_df.empty: # Check if monthly_df was create
 
         st.plotly_chart(fig_box, use_container_width=True)
 
-# Scatter plots: Relationships between variables (Year vs. Count, colored by trend) - COL 2
-with col2:
-    fig = px.scatter(
-        df, 
-        x='release_year', 
-        y='Releases',
-        size='Releases',
-        color='Above_Avg', # Color based on whether releases were above 5-year average
-        color_discrete_sequence=NETFLIX_COLORS, # Apply the requested color sequence
-        title='Yearly Releases with 5-Year Average Trend',
-        labels={'release_year': 'Year', 'Releases': 'Number of Releases', 'Above_Avg': 'Above 5Y Avg'},
-    )
-    st.plotly_chart(fig, use_container_width=True)
+
 
