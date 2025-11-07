@@ -1,320 +1,339 @@
 import streamlit as st
-import plotly.express as px
-import plotly.graph_objects as go
-import pandas as pd
-import numpy as np
-import os 
 
-
-
-# # Input data files are available in the read-only "../input/" directory
-# # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
-
-
-
-# # Input data files are available in the read-only "../input/" directory
-# # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
-
-# st.set_page_config(page_title="Netflix Actor Ratings Dashboard", layout="wide")
-
-# csv_file_path = r'Plotting data\netflix_titles_with_imdb_ratings_2.csv'
-# df2 = None
-# if not os.path.exists(csv_file_path):
-#     st.error(f"Error: The file '{csv_file_path}' was not found.")
-#     st.warning("Please make sure the CSV file is in the same directory as this Streamlit script.")
-# else:
-#     try:
-#         df2 = pd.read_csv(csv_file_path)
-#     except Exception as e:
-#         st.error(f"An error occurred while loading the main file: {e}")
-
-# df2['genre']=df2['listed_in']
-# df2.head()
-
-# df2['genre'] = df2['genre'].str.split(',')
-
-# # Remove extra spaces
-# df2['genre'] = df2['genre'].apply(lambda x: [i.strip() for i in x])
-
-# # Explode the list into separate rows
-# df_exploded = df2.explode('genre', ignore_index=True)
-
-
-
-
-
-# df_exploded['cast'] = df_exploded['cast'].str.split(',\s*')   # split on comma and optional spaces
-# df1 = df_exploded.explode('cast')
-
-
-
-
-# df1 = df1[df1['cast'].notna()]                  
-# df1 = df1[df1['cast'].str.strip() != '']
-
-
-
-# netflix_reds = ["#F28C8C", "#D82E2F", "#B01717", "#800000", "#400000"]
-
-
-
-
-
-
-# top5_genres = df1['genre'].value_counts().nlargest(5).index
-# top5_cast_genre = (
-#     df1[df1['genre'].isin(top5_genres)]
-#     .groupby(['genre', 'cast']).size()
-#     .reset_index(name='count')
-# )
-
-# top5_cast_genre = top5_cast_genre.groupby('genre', group_keys=False).apply(lambda x: x.nlargest(5, 'count'))
-
-# fig = px.bar(
-#     top5_cast_genre,
-#     x='cast', y='count', color='genre',
-#     barmode='group',
-#     color_discrete_sequence=netflix_reds,
-#     title="Top 5 Cast Members in Each of the Top 5 Genres"
-# )
-
-# fig.update_layout(
-#     plot_bgcolor='white', paper_bgcolor='white', title_x=0.5,
-#     xaxis_title="Cast", yaxis_title="Count of Titles"
-# )
-# fig.update_xaxes(tickangle=45)
-# st.plotly_chart(fig, use_container_width=True)
-
-
-
-# top5_countries = df1['country'].value_counts().nlargest(5).index
-# top3_cast_country = (
-#     df1[df1['country'].isin(top5_countries)]
-#     .groupby(['country', 'cast']).size()
-#     .reset_index(name='count')
-# )
-
-# top3_cast_country = top3_cast_country.groupby('country', group_keys=False).apply(lambda x: x.nlargest(3, 'count'))
-
-# fig = px.bar(
-#     top3_cast_country,
-#     x='cast', y='count', color='country',
-#     barmode='group',
-#     color_discrete_sequence=netflix_reds,
-#     title="Top 3 Cast Members in Each of the Top 5 Content-Producing Countries"
-# )
-
-# fig.update_layout(
-#     plot_bgcolor='white', paper_bgcolor='white', title_x=0.5,
-#     xaxis_title="Cast", yaxis_title="Count of Titles"
-# )
-# fig.update_xaxes(tickangle=45)
-# st.plotly_chart(fig, use_container_width=True)
-
-
-
-# # Find out top 10 content producing countries' genre
-# top10_countries = df_exploded['country'].value_counts().head(10).index
-# df_top = df_exploded[df_exploded['country'].isin(top10_countries)]
-# df_top
-
-
-
-# top5_countries = top10_countries[:4]
-
-# # Netflix-inspired gradient palette for genres (expandable if more genres exist)
-# netflix_gradient = [
-#     "#7A0000",  # Dark crimson
-#     "#9B0000",
-#     "#B00000",
-#     "#C61C0A",
-#     "#E50914",  # Netflix red
-#     "#F45B4D",
-#     "#F97C6C",
-#     "#FCA08A",
-#     "#FEC8B0"
-# ]
-
-# # Create faceted histogram: separate columns for each country
-# fig = px.histogram(
-#     df_top[df_top['country'].isin(top5_countries)],
-#     y='genre',
-#     color='genre',                    # color by genre, not country
-#     facet_col='country',              # one column per country
-#     category_orders={'country': top5_countries},
-#     color_discrete_sequence=netflix_gradient
-# )
-
-# # Layout styling
-# fig.update_layout(
-#     plot_bgcolor='white',
-#     paper_bgcolor='white',
-#     title="Genre Distribution Across Top 4 Content-Producing Countries (Netflix)",
-#     title_x=0.5,
-#     yaxis_title="Genre",
-#     font=dict(size=14, color='black'),
-#     legend_title="Genre",
-#     bargap=0.2
-# )
-
-# # Improve readability
-# fig.update_yaxes(autorange="reversed")
-# fig.update_xaxes(showgrid=True)
-# st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-
-
-
-
-
-
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(page_title="Netflix Actor Ratings Dashboard", layout="wide")
-
-csv_file_path = r'Plotting data\netflix_titles_with_imdb_ratings_2.csv'
-df = None
-if not os.path.exists(csv_file_path):
-    st.error(f"Error: The file '{csv_file_path}' was not found.")
-    st.warning("Please make sure the CSV file is in the same directory as this Streamlit script.")
-else:
-    try:
-        df = pd.read_csv(csv_file_path)
-    except Exception as e:
-        st.error(f"An error occurred while loading the main file: {e}")
-
-# ---------------- LOAD DATA ----------------
-
-
-# ---------------- DATA PROCESSING ----------------
-df['cast'] = df['cast'].astype(str).str.split(', ')
-df1 = df.explode('cast')
-netflix = df1.dropna(subset=['cast', 'averageRating', 'country'])
-
-# Split multiple actors into separate rows
-cast_country_rating = (
-    netflix.assign(actor=netflix['cast'].str.split(','))
-    .explode('actor')
-    .dropna(subset=['actor'])
-)
-cast_country_rating['actor'] = cast_country_rating['actor'].str.strip()
-
-# Compute average rating of each actor per country
-actor_country_rating = (
-    cast_country_rating
-    .groupby(['country', 'actor'], as_index=False)['averageRating']
-    .mean()
+# --- Page Configuration ---
+st.set_page_config(
+    layout="wide",
+    page_title="Strategic Recommendations Dashboard"
 )
 
-# Keep top 15 actors by overall average rating
-top_actors = (
-    actor_country_rating.groupby('actor')['averageRating']
-    .mean()
-    .nlargest(15)
-    .index
-)
-filtered_data = actor_country_rating[actor_country_rating['actor'].isin(top_actors)]
+# --- Netflix Theme CSS (Metamorphic Update) ---
+# UPDATES:
+# 1. Page background set to deep black (#181818) for classic Netflix feel.
+# 2. Strategy and Corporate cards are given a unified, slightly lighter background (#212121) to appear "extruded."
+# 3. Metamorphic/Neumorphic box shadows are applied to the cards for a smooth, three-dimensional look on the dark surface.
+# 4. Hover effects are added to make the cards subtly lift up, enhancing the interaction.
+#
+netflix_theme_css = f"""
+<style>
+/* 1. Page Background: Deep Netflix Black */
+html, body, [data-testid="stAppViewContainer"], .main {{
+    background-color: #181818 !important; 
+}}
 
+/* Main Title (Netflix Red with a SIGNIFICANT White Glow) */
+h1 {{
+    color: #E50914; /* Netflix Red */
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 5px #E50914; /* White glow + subtle red core */
+    text-align: center;
+    font-weight: 900;
+    padding-bottom: 25px;
+    padding-top: 25px;
+    letter-spacing: 2px;
+}}
 
+/* Sub-headers for sections (Pure White with SIGNIFICANT glow) */
+h2 {{
+    color: #FFFFFF; /* Pure White */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); /* Significant white glow */
+    font-weight: 700;
+    border-bottom: 1px solid #333333; /* Darker border */
+    padding-bottom: 15px;
+    margin-top: 40px;
+}}
 
+/* --- Metamorphic Strategy Card Style --- */
+.strategy-card {{
+    background-color: #212121; /* Card background, slightly lighter than page */
+    /* Metamorphic shadows: top/left for highlight, bottom/right for depth */
+    box-shadow: 
+        -5px -5px 10px rgba(40, 40, 40, 0.9), /* Darker top/left shadow (simulating recess) */
+        5px 5px 10px rgba(0, 0, 0, 0.7); /* Deep black bottom/right shadow (simulating extrusion) */
+    border-radius: 12px; /* Slightly more rounded corners */
+    padding: 24px;
+    height: 380px; /* Fixed height maintained */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+}}
 
-# ---------------- PLOT ----------------
-fig = px.bar(
-    filtered_data,
-    x='actor',
-    y='averageRating',
-    color='country',
-    title='IMDb Rating by Actor and Country',
-    color_discrete_sequence=['#330000', '#660000', '#990000', '#cc0000', '#ff1a1a']  # Netflix palette
-)
+.strategy-card:hover {{
+    transform: translateY(-3px); /* Subtle lift on hover */
+    box-shadow: 
+        -8px -8px 15px rgba(45, 45, 45, 0.9),
+        8px 8px 15px rgba(0, 0, 0, 0.8);
+}}
 
-fig.update_layout(
-    xaxis_title='Actor',
-    yaxis_title='Average IMDb Rating',
-    xaxis_tickangle=-45,
-    template='plotly_white',
-    font=dict(color='#221f1f', size=14),
-    title_font=dict(size=22, color='#e50914', family='Arial Black'),
-    plot_bgcolor='white',
-    paper_bgcolor='white',
-    legend_title_text='Country',
-)
-fig.update_yaxes(range=[9, 10])
-fig.update_traces(marker_line_color='#221f1f', marker_line_width=0.8)
+/* Strategy Title (inside the card - Kept Red) */
+.strategy-card h3 {{
+    color: #E50914; /* Red Title */
+    font-weight: bold;
+    font-size: 1.4rem; 
+    border-bottom: none; 
+    padding-bottom: 0;
+    margin-bottom: 15px; 
+    margin-top: 0;
+}}
 
-st.plotly_chart(fig, use_container_width=True)
+/* Strategy Text (inside the card) */
+.strategy-card p {{
+    color: #CCCCCC; /* Lighter grey for body text */
+    font-size: 1.05rem;
+    flex-grow: 1; 
+    text-align: justify; 
+}}
 
+/* --- Prominent Corporate Card Style (Metamorphic + Accent) --- */
+.corporate-card {{
+    background-color: #212121; /* Card background, same as strategy card */
+    border: 1px solid #E50914; /* Red border maintained */
+    box-shadow: 
+        -5px -5px 15px rgba(229, 9, 20, 0.1), /* Subtle Red Highlight */
+        5px 5px 15px rgba(0, 0, 0, 0.8); /* Deep Black Shadow */
+    border-radius: 12px;
+    padding: 24px;
+    height: 300px; /* Fixed height maintained */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+}}
 
-st.markdown("---")
+.corporate-card:hover {{
+    transform: translateY(-5px); /* Stronger lift for corporate focus */
+    box-shadow: 
+        0 0 30px rgba(229, 9, 20, 0.4), /* Intense Red Glow on hover */
+        0 0 20px rgba(0, 0, 0, 1);
+}}
 
+/* Corporate Title (inside the card - Kept Red) */
+.corporate-card h3 {{
+    color: #E50914; 
+    font-weight: 900; /* Extra bold */
+    font-size: 1.5rem; 
+    margin-top: 0;
+    margin-bottom: 20px; 
+}}
 
+/* Corporate Text (inside the card) */
+.corporate-card p {{
+    color: #FFFFFF; /* Bright White */
+    font-size: 1.1rem;
+    flex-grow: 1;
+    text-align: justify; 
+}}
+</style>
+"""
 
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(page_title="Netflix Actor Distribution Dashboard", layout="wide")
+# Inject the custom CSS
+st.markdown(netflix_theme_css, unsafe_allow_html=True)
 
-# ---------------- LOAD DATA ----------------
+# --- Dashboard Content ---
 
+# 1. Main Title
+st.title("Strategic Recommendations")
 
-# ---------------- DATA PROCESSING ----------------
-df['cast'] = df['cast'].astype(str).str.split(', ')
-df1 = df.explode('cast')
+# --- SECTION 1: Market & Retention Strategies (4 Cards) ---
+st.subheader("Market & Retention Strategies")
 
-# Drop rows with missing country or cast info
-netflix = df1.dropna(subset=['country', 'cast'])
+# Define the data for this section
+strategies_market = [
+    {
+        "title": "Prioritize Family/General Audience Content",
+        "text": "Implement a content strategy that actively diversifies the catalog by investing in family and general audience content to achieve balanced viewership and expand the total addressable market."
+    },
+    {
+        "title": "Target High-Priority Country-Genre Combinations",
+        "text": "Utilize the priority score formula (based on growth and representation) to guide content commissioning, focusing on underrepresented catalogs in specific countries/genres that demonstrate high growth potential."
+    },
+    {
+        "title": "Sustain Investment in Series",
+        "text": "Continue the strategic focus on TV shows, as the rising Content Focus Ratio (CFR) indicates this is a key driver for long-term user retention."
+    },
+    {
+        "title": "Leverage High-Rated Niche Content",
+        "text": "Increase focus on genres with a High-Rating Title Ratio (HRTR), such as Classic & Cult TV and Classic Movies. High-quality niche content can be a strong differentiator."
+    }
+]
 
-df = (
-    netflix.assign(actor=netflix['cast'].str.split(','))
-    .explode('actor')
-    .dropna(subset=['actor'])
-)
-df['actor'] = df['actor'].str.strip()
+# Create the 1x4 Grid
+cols_market = st.columns(4, gap="medium")
+for i, col in enumerate(cols_market):
+    with col:
+        st.markdown(f"""
+        <div class="strategy-card">
+            <h3>{strategies_market[i]['title']}</h3>
+            <p>{strategies_market[i]['text']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-# Remove duplicates — each (actor, country) counted once
-df_unique = df.drop_duplicates(subset=['country', 'actor'])
+# --- SECTION 2: High-Value Acquisition Targets (3 Cards) ---
+st.subheader("High-Value Acquisition Targets")
 
-# Find top 5 countries by number of *unique* actors
-top_countries = df_unique['country'].value_counts().nlargest(5).index
+# Define the data for this section
+strategies_acquisition = [
+    {
+        "title": "Invest in High-Satisfaction Genres",
+        "text": "Aggressively invest in high-quality acquisitions and originals within the Classic Movies, Classic & Cult TV, and Anime Series genres. These genres show the highest average ratings (Avg. Rating > 7.0), indicating a highly satisfied and engaged niche audience."
+    },
+    {
+        "title": "Focus on Globally Stable Content",
+        "text": "Classic movies maintain a high average rating consistently across the United States, India, and the United Kingdom. This global stability makes it a low-risk, high-satisfaction content category that appeals strongly across diverse markets."
+    },
+    {
+        "title": "Secure Premium Documentary Content",
+        "text": "Secure premium documentary and factual content, specifically within the science and nature TV category. This genre shows robust average ratings, particularly in the UK and India, attracting audiences seeking educational content."
+    }
+]
 
-# Filter to top 5 countries
-df_top = df_unique[df_unique['country'].isin(top_countries)]
+# Create the 1x3 Grid
+cols_acq = st.columns(3, gap="medium")
+for i, col in enumerate(cols_acq):
+    with col:
+        st.markdown(f"""
+        <div class="strategy-card">
+            <h3>{strategies_acquisition[i]['title']}</h3>
+            <p>{strategies_acquisition[i]['text']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-# Count unique actors per country
-country_counts = df_top['country'].value_counts().reset_index()
-country_counts.columns = ['country', 'unique_actor_count']
+# --- SECTION 3: Core Corporate & Financial Directives (2 Cards) ---
+st.subheader("Core Corporate & Financial Directives")
 
-# ---------------- STREAMLIT UI ----------------
-st.title("Netflix Actor Distribution Across Top 5 Countries")
-st.markdown("### Explore which countries have the largest number of unique actors in Netflix titles")
+# Define the data for this section
+strategies_corporate = [
+    {
+        "title": "Content & Creator Allocation Strategy",
+        "text": "The highest priority is allocating capital to create and expand ownable Intellectual Property (IP), such as Stranger Things & Squid Game. This creates permanent assets that build a competitive 'moat' and can be monetized across sequels, games, and merchandise."
+    },
+    {
+        "title": "Financial & Competitive Strategy", 
+        "text": "The company is now highly profitable. After funding all content and operations, its excess free cash flow is allocated to retiring debt and executing a large-scale stock buyback program to return capital to shareholders."
+    }
+]
 
-# ---------------- PLOT ----------------
-fig = px.bar(
-    country_counts,
-    x='country',
-    y='unique_actor_count',
-    color='unique_actor_count',
-    color_continuous_scale=['#330000', '#660000', '#990000', '#cc0000', '#ff1a1a'],
-    title='Cast Actors in Top 5 Countries'
-)
+# Create the 1x2 Grid using the new .corporate-card style
+cols_corp = st.columns(2, gap="medium")
+for i, col in enumerate(cols_corp):netflix_theme_css = """
+<style>
 
-fig.update_layout(
-    xaxis_title='Country',
-    yaxis_title='Number of Unique Actors',
-    template='plotly_white',
-    font=dict(color='#221f1f', size=14),
-    title_font=dict(size=22, color='#e50914', family='Arial Black'),
-    plot_bgcolor='white',
-    paper_bgcolor='white',
-    coloraxis_colorbar=dict(
-        title='Actor Count',
-        tickcolor='#221f1f',
-        tickfont=dict(color='#221f1f')
-    )
-)
+/* --- GLOBAL PAGE BACKGROUND (True Netflix Black) --- */
+html, body, [data-testid="stAppViewContainer"], .main {
+    background-color: #0D0D0D !important;
+}
 
-# Display Plotly figure
-st.plotly_chart(fig, use_container_width=True)
+/* --- MAIN TITLE (Cinematic Netflix Glow) --- */
+h1 {
+    color: #FFFFFF;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 2px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 
-st.markdown("---")
+    text-shadow:
+        0 0 25px rgba(229, 9, 20, 0.9),
+        0 0 10px rgba(229, 9, 20, 0.8),
+        0 0 5px rgba(255, 255, 255, 0.5);
+}
 
+/* --- SECTION HEADERS (Clean Netflix White) --- */
+h2 {
+    color: #FFFFFF;
+    font-weight: 700;
+    margin-top: 40px;
+    padding-bottom: 10px;
+
+    text-shadow:
+        0 0 12px rgba(255, 255, 255, 0.35);
+
+    border-bottom: 2px solid #E50914;
+}
+
+/* --- UNIVERSAL CARD STYLE (Premium Netflix Look) --- */
+.strategy-card, .corporate-card {
+    background: linear-gradient(145deg, #1A1A1A, #111111);
+    border-radius: 14px;
+
+    padding: 24px;
+    height: 380px;
+
+    box-shadow:
+        0 0 25px rgba(0, 0, 0, 0.8),
+        inset 0 0 10px rgba(255, 255, 255, 0.03),
+        inset 0 0 25px rgba(0, 0, 0, 0.7);
+
+    transition: all 0.25s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HOVER EFFECT (Smooth Elevation) --- */
+.strategy-card:hover, .corporate-card:hover {
+    transform: scale(1.02);
+    box-shadow:
+        0 0 45px rgba(229, 9, 20, 0.45),
+        0 0 25px rgba(255, 255, 255, 0.1);
+}
+
+/* --- CARD TITLE (Netflix Red, Elegant) --- */
+.strategy-card h3, .corporate-card h3 {
+    color: #E50914;
+    font-size: 1.45rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 0 12px rgba(229, 9, 20, 0.65),
+        0 0 5px rgba(229, 9, 20, 0.4);
+}
+
+/* --- CARD BODY TEXT (Clean Grey) --- */
+.strategy-card p, .corporate-card p {
+    color: #D4D4D4;
+    font-size: 1.07rem;
+    text-align: justify;
+    flex-grow: 1;
+    line-height: 1.55;
+}
+
+/* --- SPECIAL CORPORATE CARD OVERRIDES (Highlight Tier) --- */
+.corporate-card {
+    border: 1px solid rgba(229, 9, 20, 0.85);
+    height: 320px;
+
+    box-shadow:
+        0 0 20px rgba(229, 9, 20, 0.25),
+        0 0 10px rgba(0, 0, 0, 0.9),
+        inset 0 0 20px rgba(229, 9, 20, 0.15);
+}
+
+.corporate-card:hover {
+    transform: scale(1.03);
+    box-shadow:
+        0 0 45px rgba(229, 9, 20, 0.75),
+        0 0 30px rgba(255, 255, 255, 0.15);
+}
+</style>
+"""
+
+# Define the data for this section
+strategies_corporate = [
+    {
+        "title": "Content & Creator Allocation Strategy",
+        "text": "The highest priority is allocating capital to create and expand ownable Intellectual Property (IP), such as Stranger Things & Squid Game. This creates permanent assets that build a competitive 'moat' and can be monetized across sequels, games, and merchandise."
+    },
+    {
+        "title": "Financial & Competitive Strategy", 
+        "text": "The company is now highly profitable. After funding all content and operations, its excess free cash flow is allocated to retiring debt and executing a large-scale stock buyback program to return capital to shareholders."
+    }
+]
+
+# Create the 1x2 Grid using the new .corporate-card style
+cols_corp = st.columns(2, gap="medium")
+for i, col in enumerate(cols_corp):
+    with col:
+        st.markdown(f"""
+        <div class="corporate-card">
+            <h3>{strategies_corporate[i]['title']}</h3>
+            <p>{strategies_corporate[i]['text']}</p>
+        </div>
+        """, unsafe_allow_html=True)

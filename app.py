@@ -13,9 +13,9 @@ st.markdown("""
     left: 0 !important;
     top: 60px !important; /* FIXED: Starts 60px from the top */
     
-    /* Height Fix: Shorter, content-fit height */
-    height: fit-content !important; 
-    max-height: 80vh; /* ADJUSTED: Reduced max height to 80vh for a shorter look */
+    /* MODIFIED: Set height to almost full viewport height minus the top margin */
+    height: 90vh !important;
+    max-height: 90vh;
 
     width: 280px !important;
     min-width: 280px !important;
@@ -32,7 +32,7 @@ st.markdown("""
     z-index: 9999 !important;
     padding: 0 !important;
     overflow-x: hidden !important;
-    overflow-y: hidden; /* Prevents scrollbar inside sidebar */
+    overflow-y: auto; /* Changed to 'auto' to allow scrolling if content exceeds 90vh */
 }
 
 /* Sidebar Hover/Expand (DO NOT TOUCH) */
@@ -55,14 +55,14 @@ st.markdown("""
 
 /* Force White Text and Enlarged Size on all elements inside the sidebar */
 [data-testid="stSidebar"] * {
-    color: white !important; 
-    font-size: 18px !important; 
-    font-weight: 600 !important; 
+    color: white !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
 }
 
 /* Re-apply opacity transition to the specific text wrapper */
 [data-testid="stSidebar"] .st-emotion-cache-1wmy9hl p {
-    opacity: 0; 
+    opacity: 0;
     transition: opacity 0.45s ease 0.15s, color 0.2s;
     white-space: nowrap;
 }
@@ -73,12 +73,12 @@ st.markdown("""
 }
 
 /* Navigation Links (Anchor Tag) Styling */
-[data-testid="stSidebar"] a { 
+[data-testid="stSidebar"] a {
     padding: 12px 20px;
     margin: 5px 10px;
     border-radius: 8px;
     transition: background-color 0.2s;
-    display: flex; 
+    display: flex;
     align-items: center;
 }
 
@@ -88,16 +88,16 @@ st.markdown("""
 }
 
 /* Navigation Links: Active page highlight */
-[data-testid="stSidebar"] .st-emotion-cache-1jmpsf6 a { 
+[data-testid="stSidebar"] .st-emotion-cache-1jmpsf6 a {
     background-color: #CC0000 !important; /* Darker red for active link */
-    border-left: 5px solid white; 
+    border-left: 5px solid white;
     padding-left: 15px;
-    margin-left: 0; 
+    margin-left: 0;
 }
 
 /* Adjust padding at the top of the sidebar content */
 [data-testid="stSidebar"] > div > div > div:nth-child(1) {
-    padding-top: 20px !important; 
+    padding-top: 20px !important;
     padding-bottom: 10px !important;
 }
 
