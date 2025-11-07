@@ -3,146 +3,161 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
-import os 
 
-import pandas as pd
-import plotly.express as px
-import streamlit as st
-import plotly.graph_objects as go
-import numpy as np
+# ---------------------------------------------------------
+# PAGE CONFIG
+# ---------------------------------------------------------
+st.set_page_config(layout="wide", page_title="Netflix Insights Dashboard")
 
-# Assuming original_df is your Netflix dataset loaded previously
+# ---------------------------------------------------------
+# METAMORPHIC NEON GLOW CSS
+# ---------------------------------------------------------
+st.markdown("""
+<style>
+
+:root {
+    --netflix-red: #E50914;
+    --netflix-red-soft: rgba(229, 9, 20, 0.45);
+    --netflix-red-glow: rgba(229, 9, 20, 0.75);
+    --card-bg: #111111;
+    --card-border: #1f1f1f;
+}
+
+/* --- TITLES & HEADERS NEON GLOW --- */
+h1, h2, h3, h4, h5 {
+    color: var(--netflix-red) !important;
+    text-shadow:
+        0 0 8px var(--netflix-red-soft),
+        0 0 14px var(--netflix-red-glow),
+        0 0 22px var(--netflix-red-glow);
+    font-weight: 700 !important;
+}
+
+/* --- METAMORPHIC GLOW CARD --- */
+.glow-card {
+    background: var(--card-bg);
+    padding: 30px 35px;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    margin-top: 25px;
+    margin-bottom: 35px;
+
+    box-shadow:
+        inset 0 0 25px rgba(255, 255, 255, 0.05),
+        0 0 20px rgba(229, 9, 20, 0.25),
+        0 0 35px rgba(229, 9, 20, 0.35),
+        0 0 55px rgba(229, 9, 20, 0.45);
+
+    transition: all 0.35s ease-in-out;
+}
+
+.glow-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        inset 0 0 35px rgba(255, 255, 255, 0.08),
+        0 0 35px rgba(229, 9, 20, 0.55),
+        0 0 55px rgba(229, 9, 20, 0.75),
+        0 0 85px rgba(229, 9, 20, 0.9);
+}
+
+/* Chart container glow */
+.chart-wrap {
+    background: #0c0c0c;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 0 22px rgba(229, 9, 20, 0.4);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# CARD WRAPPERS
+# ---------------------------------------------------------
+def glow_card(title: str):
+    st.markdown(f"<div class='glow-card'><h2>{title}</h2>", unsafe_allow_html=True)
+
+def end_card():
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# LOAD DATA
+# ---------------------------------------------------------
 try:
     df = st.session_state['netflix_df'].copy()
 except KeyError:
-    st.error("Error: Netflix DataFrame not found in session state. Please ensure 'netflix_df' is loaded into st.session_state.")
+    st.error("Error: Netflix DataFrame not found in session state.")
     st.stop()
-df = df[['title', 'listed_in', 'country', 'rating']].dropna(subset=['listed_in', 'country', 'rating']).copy()
 
-# Split multiple countries/genres
-df['country'] = df['country'].str.split(', ')
-df['listed_in'] = df['listed_in'].str.split(', ')
+# ---------------------------------------------------------
+# SECTION 1 — TOP GENRE PER COUNTRY
+# ---------------------------------------------------------
+df1 = df[['title', 'listed_in', 'country', 'rating']].dropna(subset=['listed_in', 'country', 'rating']).copy()
+df1['country'] = df1['country'].str.split(', ')
+df1['listed_in'] = df1['listed_in'].str.split(', ')
+df1 = df1.explode('country').explode('listed_in')
+df1.rename(columns={'listed_in': 'Genre', 'country': 'Country'}, inplace=True)
 
-# Explode both
-df = df.explode('country').explode('listed_in')
-df.rename(columns={'listed_in': 'Genre', 'country': 'Country'}, inplace=True)
-
-# Group by Country & Genre to find the most common one
-genre_counts = df.groupby(['Country', 'Genre']).size().reset_index(name='Count')
-
-# For each country, find top genre
+genre_counts = df1.groupby(['Country', 'Genre']).size().reset_index(name='Count')
 top_genre = genre_counts.loc[genre_counts.groupby('Country')['Count'].idxmax()]
 
-# Merge back with rating info
-rating_mode = df.groupby(['Country', 'Genre'])['rating'].agg(lambda x: x.mode()[0] if not x.mode().empty else None).reset_index()
+rating_mode = df1.groupby(['Country', 'Genre'])['rating'].agg(
+    lambda x: x.mode()[0] if not x.mode().empty else None
+).reset_index()
+
 insight_df = pd.merge(top_genre, rating_mode, on=['Country', 'Genre'], how='left')
-
 insight_df = insight_df.sort_values(by='Count', ascending=False).reset_index(drop=True)
-insight_df.head(10)
-
-top15 = insight_df.sort_values('Count', ascending=False).head(15)
-
-st.title("Top Genre per Country and Their Dominant Rating")
-
-# Create combined label
 insight_df['Country_Genre'] = insight_df['Country'] + ' - ' + insight_df['Genre']
 
-# Sort by count to keep top 15 overall
 top15 = insight_df.sort_values('Count', ascending=False).head(15)
-
-# Define red color shades (light → dark)
 red_palette = ['#FFB3B3', '#FF6666', '#B22222', '#800000']
 
-# Create interactive bar plot
-fig = px.bar(
+fig1 = px.bar(
     top15,
     x='Country_Genre',
     y='Count',
     color='rating',
-    title='Top Genre per Country and Their Dominant Rating',
+
     color_discrete_sequence=red_palette
 )
 
-# Layout styling
-fig.update_layout(
-    title=dict(text='Top Genre per Country and Their Dominant Rating', font=dict(color='black')),
-    plot_bgcolor='white',
-    paper_bgcolor='white',
-    font=dict(family='Times New Roman', color='black', size=14),
-    title_x=0.5,
-    xaxis=dict(
-        title=dict(text='Country - Genre', font=dict(color='black')),
-        tickfont=dict(color='black'),
-        showgrid=True,
-        gridcolor='lightgray',
-        linecolor='black',
-        tickangle=75
-    ),
-    yaxis=dict(
-        title=dict(text='No. of Titles in Top Genre', font=dict(color='black')),
-        tickfont=dict(color='black'),
-        showgrid=True,
-        gridcolor='lightgray',
-        linecolor='black'
-    ),
-    legend=dict(
-        title=dict(text='Dominant Rating', font=dict(color='black')),
-        font=dict(color='black')
-    )
+fig1.update_layout(
+
+    plot_bgcolor='black',
+    paper_bgcolor='black',
+    font=dict(family='Times New Roman', color='white', size=14),
+    xaxis=dict(tickangle=70, color='white'),
+    yaxis=dict(color='white')
 )
 
-# Bar outline
-fig.update_traces(marker_line_color='black', marker_line_width=1.2)
+# ---- Render Section 1 ----
+glow_card("Top Genre per Country and Their Dominant Rating")
+st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+st.plotly_chart(fig1, use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
+end_card()
 
-st.plotly_chart(fig, width="stretch")
-
-try:
-    df = st.session_state['netflix_df'].copy()
-except KeyError:
-    st.error("Error: Netflix DataFrame not found in session state. Please ensure 'netflix_df' is loaded into st.session_state.")
-    st.stop()
-
+# ---------------------------------------------------------
+# SECTION 2 — TITLES ADDED PER YEAR
+# ---------------------------------------------------------
 TOP_N = 5
-CSV_FALLBACK = "netflix_titles.csv"
 RED_SHADES = ['#B00610', '#E50914', '#FF6F61', '#FF8A80', '#FFB3B3']
-FONT_FAMILY = "Times New Roman"
 
-st.title(f"Titles Added per Year — Top {TOP_N} Genres")
+df2 = df.copy()
+df2['date_added'] = df2['date_added'].astype(str).str.strip()
+df2['date_added'] = pd.to_datetime(df2['date_added'], errors='coerce')
+df2 = df2[df2['date_added'].notna()]
 
-# Ensure column exists
-if 'date_added' not in df.columns:
-    raise ValueError("'date_added' column not found in dataframe")
-
-# Convert to string first, strip spaces, then convert
-df['date_added'] = df['date_added'].astype(str).str.strip()
-df['date_added'] = pd.to_datetime(df['date_added'], errors='coerce')
-
-# Drop rows where conversion failed
-df = df[df['date_added'].notna()].copy()
-
-# Extract year
-df['year_added'] = df['date_added'].dt.year.astype(int)
-
-
-# require genres
-if 'listed_in' not in df.columns:
-    st.error("❌ Expected 'listed_in' column in dataset")
-    st.stop()
-
-# explode genres
-df_exp = df.dropna(subset=['listed_in']).copy()
+df2['year_added'] = df2['date_added'].dt.year.astype(int)
+df_exp = df2.dropna(subset=['listed_in']).copy()
 df_exp['listed_in'] = df_exp['listed_in'].astype(str)
 df_exp = df_exp.assign(genre=df_exp['listed_in'].str.split(',')).explode('genre')
 df_exp['genre'] = df_exp['genre'].str.strip()
 
-# id column for unique counting
 id_col = next((c for c in ['show_id','id','title_id','title'] if c in df_exp.columns), df_exp.columns[0])
-
-# totals to pick top genres
 genre_totals = df_exp.groupby('genre')[id_col].nunique().sort_values(ascending=False)
 top_genres = genre_totals.head(TOP_N).index.tolist()
 
-# compute counts per year per genre
 year_genre = (
     df_exp[df_exp['genre'].isin(top_genres)]
     .groupby(['year_added','genre'])[id_col]
@@ -150,89 +165,71 @@ year_genre = (
     .reset_index(name='count')
 )
 
-if year_genre.empty:
-    st.warning("⚠️ No data found for the selected genres.")
-    st.stop()
-
-# build complete year index
 min_year = int(year_genre['year_added'].min())
 max_year = int(year_genre['year_added'].max())
 years = np.arange(min_year, max_year + 1)
 
 pivot = year_genre.pivot(index='year_added', columns='genre', values='count')
 pivot = pivot.reindex(index=years, columns=top_genres, fill_value=0)
-pivot = pivot.apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
 plot_df = pivot.reset_index().melt(id_vars='year_added', var_name='genre', value_name='count')
 
-# ---------- Plot ----------
-fig = go.Figure()
+fig2 = go.Figure()
 for i, g in enumerate(top_genres):
     series = plot_df[plot_df['genre'] == g]
-    fig.add_trace(go.Scatter(
+    fig2.add_trace(go.Scatter(
         x=series['year_added'],
         y=series['count'],
         mode='lines+markers',
         name=g,
-        line=dict(width=2.5, color=RED_SHADES[i % len(RED_SHADES)]),
-        marker=dict(size=6),
-        hovertemplate="<b>%{text}</b><br>Year: %{x}<br>Titles added: %{y:,}<extra></extra>",
-        text=[g]*len(series)
+        line=dict(width=2.5, color=RED_SHADES[i]),
+        marker=dict(size=6)
     ))
 
-fig.update_layout(
-    title=dict(text=f"Titles Added per Year — Top {TOP_N} Genres", font=dict(color="black")),
-    xaxis=dict(
-        title=dict(text='Year Added', font=dict(color="black")),
-        tickfont=dict(color="black"),
-        tickmode='linear',
-        dtick=1,
-        showgrid=True,
-        gridcolor='rgba(0,0,0,0.06)',
-        linecolor='black'
-    ),
-    yaxis=dict(
-        title=dict(text='Number of Titles Added', font=dict(color="black")),
-        tickfont=dict(color="black"),
-        showgrid=True,
-        gridcolor='rgba(0,0,0,0.06)',
-        linecolor='black'
-    ),
-    paper_bgcolor='white',
-    plot_bgcolor='white',
-    font=dict(family=FONT_FAMILY, color="black", size=12),
-    title_font=dict(family=FONT_FAMILY, color="black", size=18),
-    legend=dict(
-        title=dict(text='Genre', font=dict(color="black")),
-        font=dict(color="black"),
-        bgcolor='white',
-        bordercolor='black',
-        borderwidth=1
-    ),
-    margin=dict(t=90, b=60, l=80, r=40),
-    width=900,
-    height=520
+fig2.update_layout(
+
+    plot_bgcolor='black',
+    paper_bgcolor='black',
+    font=dict(color='white'),
+    xaxis=dict(color='white', dtick=1),
+    yaxis=dict(color='white'),
 )
 
-st.plotly_chart(fig, width="stretch")
+# ---- Render Section 2 ----
+glow_card(f"Titles Added per Year — Top {TOP_N} Genres")
+st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+st.plotly_chart(fig2, use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
+end_card()
 
-import streamlit as st
-import pandas as pd
-import plotly.express as px
+# ---------------------------------------------------------
+# SECTION 3 — GENRE VS RATING SPREAD (BOXPLOT)
+# ---------------------------------------------------------
+genre_df = df.copy()
+genre_df['listed_in'] = genre_df['listed_in'].fillna('Unknown')
+genre_df = genre_df.assign(genre=genre_df['listed_in'].str.split(', ')).explode('genre')
 
-st.set_page_config(layout="wide")
+fig3 = px.box(
+    genre_df,
+    x='genre',
+    y='rating',
+    color='genre',
 
-# Load Data
-df = st.session_state['netflix_df'].copy()
+    color_discrete_sequence=px.colors.sequential.Reds
+)
 
-df['listed_in'] = df['listed_in'].fillna('Unknown')
+fig3.update_layout(
+    title_x=0.5,
+    plot_bgcolor='black',
+    paper_bgcolor='black',
+    font=dict(color='white'),
+    xaxis=dict(color='white'),
+    yaxis=dict(color='white')
+)
 
-genre_df = df.assign(genre=df['listed_in'].str.split(', ')).explode('genre')
-
-st.title("Genre vs Rating Spread")
-
-# Genre vs Rating Boxplot (shades of red)
-fig = px.box(genre_df, x='genre', y='rating', color='genre', color_discrete_sequence=px.colors.sequential.Reds)
-st.plotly_chart(fig, use_container_width=True)
-
-
+# ---- Render Section 3 ----
+glow_card("Genre vs Rating Spread")
+st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+st.plotly_chart(fig3, use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
+end_card()
