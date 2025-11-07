@@ -14,16 +14,16 @@ st.markdown("""
     top: 60px !important; /* FIXED: Starts 60px from the top */
     
     /* MODIFIED: Set height to almost full viewport height minus the top margin */
-    height: 90vh !important;
-    max-height: 90vh;
+    height: 95vh !important;
+    max-height: 95vh;
 
     width: 280px !important;
     min-width: 280px !important;
     max-width: 280px !important;
 
     /* Styling: Red Background, Rounded Corners */
-    background-color: #000000 !important;
-    border-radius: 15px !important;
+    background-color: #211E1E !important;
+    border-radius: 15px !important; 
     border: none;
     
     /* Hover/Expand Logic */
@@ -98,7 +98,7 @@ st.markdown("""
 /* Adjust padding at the top of the sidebar content */
 [data-testid="stSidebar"] > div > div > div:nth-child(1) {
     padding-top: 20px !important;
-    padding-bottom: 10px !important;
+    padding-bottom: 0px !important;
 }
 
 </style>
