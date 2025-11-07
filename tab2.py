@@ -9,12 +9,52 @@ import os # Import os for better path handling
 st.set_page_config(layout="wide")
 st.markdown("""
     <style>
+        /* FIX: Ensure titles and headings are red and centered using !important */
+        h1, h2, h3, h4, h5, h6 {
+            text-align: center;
+            color: #FF0000 !important; /* Enforce Red color */
+        }
+
+        /* Style for the main block container to maintain layout */
         .block-container {
             padding-left: 2rem;
             padding-right: 2rem;
             padding-top: 2rem;
             max-width: 100%;
             margin-top:0rem;
+        }
+
+        /* Style for the Data Preview container (st.dataframe) with rounded corners */
+        div[data-testid="stDataFrame"] {
+            border: 1px solid #ddd; /* Subtle border */
+            border-radius: 10px; /* Rounded corners */
+            padding: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        /* BUTTON STYLING: Make all Streamlit buttons (like Reset Filters) red with white text */
+        div[data-testid="stButton"] button {
+            /* General button size adjustment (from previous version) */
+            padding: 0.45rem 0.85rem; 
+            
+            /* BASE STYLES for Button */
+            background-color: #FF0000; /* Red Background */
+            color: white !important; /* White Text (using !important for certainty) */
+            border-color: #FF0000; /* Red Border */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
+        
+        /* NEW: Hover effect for Reset Button (Light Red/Orangish) */
+        div[data-testid="stButton"] button:hover {
+            background-color: #FF7F50; /* Coral/Light Orangish Red */
+            border-color: #FF7F50;
+            color: white !important;
+        }
+
+        /* Optional: Make selectboxes fill the available column width */
+        div[data-testid="stSelectbox"] > div {
+            width: 100% !important;
+            display: block;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -88,26 +128,8 @@ def reset_filters():
         st.session_state[k] = "All"
     # st.experimental_rerun() is often not needed just for changing state values
 
-# --- CSS: make selectboxes full width of their column ---
-st.markdown(
-    """
-    <style>
-    /* Make selectboxes fill the available column width */
-    div[data-testid="stSelectbox"] > div {
-        width: 100% !important;
-        display: block;
-    }
-    /* Make buttons a bit smaller/compact-looking inside layout */
-    div[data-testid="stButton"] button {
-        padding: 0.45rem 0.85rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 # --- Layout: two rows, six columns (2 columns per filter) ---
-st.markdown("###  Search & Filter")
+st.markdown("###  Search & Filter")
 col1, col2, col3 = st.columns(3)
 
 # Helper: safe index chooser (returns 0 if not found)
@@ -143,7 +165,7 @@ with col3:
         key=WIDGET_KEYS["year"],
     )
 
-#making selectbox (second row)    
+#making selectbox (second row)     
 col1b, col2b, col3b= st.columns(3)
 
 with col1b:
