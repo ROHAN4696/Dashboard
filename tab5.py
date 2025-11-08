@@ -23,15 +23,15 @@ st.markdown("""
     --card-border: #1f1f1f;
 }
 
-/* --- TITLES & HEADERS NEON GLOW --- */
-h1, h2, h3, h4, h5 {
-    color: var(--netflix-red) !important;
-    text-shadow:
-        0 0 8px var(--netflix-red-soft),
-        0 0 14px var(--netflix-red-glow),
-        0 0 22px var(--netflix-red-glow);
-    font-weight: 700 !important;
-}
+# /* --- TITLES & HEADERS NEON GLOW --- */
+# h1, h2, h3, h4, h5 {
+#     color: var(--netflix-red) !important;
+#     text-shadow:
+#         0 0 8px var(--netflix-red-soft),
+#         0 0 14px var(--netflix-red-glow),
+#         0 0 22px var(--netflix-red-glow);
+#     font-weight: 700 !important;
+# }
 
 /* --- METAMORPHIC GLOW CARD --- */
 .glow-card {
@@ -42,23 +42,23 @@ h1, h2, h3, h4, h5 {
     margin-top: 25px;
     margin-bottom: 35px;
 
-    box-shadow:
-        inset 0 0 25px rgba(255, 255, 255, 0.05),
-        0 0 20px rgba(229, 9, 20, 0.25),
-        0 0 35px rgba(229, 9, 20, 0.35),
-        0 0 55px rgba(229, 9, 20, 0.45);
+    # box-shadow:
+    #     inset 0 0 25px rgba(255, 255, 255, 0.05),
+    #     0 0 20px rgba(229, 9, 20, 0.25),
+    #     0 0 35px rgba(229, 9, 20, 0.35),
+    #     0 0 55px rgba(229, 9, 20, 0.45);
 
     transition: all 0.35s ease-in-out;
 }
 
-.glow-card:hover {
-    transform: translateY(-5px);
-    box-shadow:
-        inset 0 0 35px rgba(255, 255, 255, 0.08),
-        0 0 35px rgba(229, 9, 20, 0.55),
-        0 0 55px rgba(229, 9, 20, 0.75),
-        0 0 85px rgba(229, 9, 20, 0.9);
-}
+# .glow-card:hover {
+#     transform: translateY(-5px);
+#     box-shadow:
+#         inset 0 0 35px rgba(255, 255, 255, 0.08),
+#         0 0 35px rgba(229, 9, 20, 0.55),
+#         0 0 55px rgba(229, 9, 20, 0.75),
+#         0 0 85px rgba(229, 9, 20, 0.9);
+# }
 
 /* Chart container glow */
 .chart-wrap {
@@ -132,7 +132,7 @@ fig1.update_layout(
 
 # ---- Render Section 1 ----
 glow_card("Top Genre per Country and Their Dominant Rating")
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig1, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 end_card()
@@ -197,7 +197,7 @@ fig2.update_layout(
 
 # ---- Render Section 2 ----
 glow_card(f"Titles Added per Year — Top {TOP_N} Genres")
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig2, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 end_card()
@@ -229,7 +229,7 @@ fig3.update_layout(
 
 # ---- Render Section 3 ----
 glow_card("Genre vs Rating Spread")
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig3, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 end_card()

@@ -33,32 +33,32 @@ custom_css = """
     border: 1px solid #1f1f1f;
     margin-top: 25px;
     margin-bottom: 35px;
-    box-shadow:
-        inset 0 0 25px rgba(255,255,255,0.05),
-        0 0 20px rgba(229, 9, 20, 0.25),
-        0 0 35px rgba(229, 9, 20, 0.35),
-        0 0 55px rgba(229, 9, 20, 0.45);
+    # box-shadow:
+    #     inset 0 0 25px rgba(255,255,255,0.05),
+    #     0 0 20px rgba(229, 9, 20, 0.25),
+    #     0 0 35px rgba(229, 9, 20, 0.35),
+    #     0 0 55px rgba(229, 9, 20, 0.45);
     transition: all 0.3s ease-in-out;
 }
 
-.glow-card:hover {
-    transform: translateY(-4px);
-    box-shadow:
-        inset 0 0 32px rgba(255,255,255,0.09),
-        0 0 38px rgba(229, 9, 20, 0.55),
-        0 0 55px rgba(229, 9, 20, 0.75),
-        0 0 85px rgba(229, 9, 20, 0.9);
-}
+# .glow-card:hover {
+#     transform: translateY(-4px);
+#     box-shadow:
+#         inset 0 0 32px rgba(255,255,255,0.09),
+#         0 0 38px rgba(229, 9, 20, 0.55),
+#         0 0 55px rgba(229, 9, 20, 0.75),
+#         0 0 85px rgba(229, 9, 20, 0.9);
+# }
 
-/* Glowing red headers */
-h1, h2, h3 {
-    color: #E50914 !important;
-    text-shadow:
-        0 0 6px rgba(229, 9, 20, 0.45),
-        0 0 12px rgba(229, 9, 20, 0.75),
-        0 0 18px rgba(229, 9, 20, 0.9);
-    font-weight: 800 !important;
-}
+# /* Glowing red headers */
+# h1, h2, h3 {
+#     color: #E50914 !important;
+#     text-shadow:
+#         0 0 6px rgba(229, 9, 20, 0.45),
+#         0 0 12px rgba(229, 9, 20, 0.75),
+#         0 0 18px rgba(229, 9, 20, 0.9);
+#     font-weight: 800 !important;
+# }
 
 /* Remove white bg from plotly wrapper (ensures chart-wrap background shows) */
 .plot-container > div {
@@ -185,7 +185,7 @@ with col_a:
     )
     fig2 = update_fig_style(fig2, 'Movies: % of Titles per Country')
 
-    st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+    # st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
     st.plotly_chart(fig2, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -197,7 +197,7 @@ with col_b:
     )
     fig3 = update_fig_style(fig3, 'TV Shows: % of Titles per Country')
 
-    st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+    # st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
     st.plotly_chart(fig3, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -266,7 +266,7 @@ with col1:
     )
     fig_movies = update_fig_style(fig_movies, "Movies: % of Titles & Top Genre")
 
-    st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+    # st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
     st.plotly_chart(fig_movies, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -278,7 +278,7 @@ with col2:
     )
     fig_tv = update_fig_style(fig_tv, "TV Shows: % of Titles & Top Genre")
 
-    st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+    # st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
     st.plotly_chart(fig_tv, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -315,7 +315,7 @@ fig4 = px.bar(
 )
 fig4 = update_fig_style(fig4, 'Top 10 International Countries')
 
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig4, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -332,7 +332,7 @@ fig5 = px.bar(
 )
 fig5 = update_fig_style(fig5, 'Country vs Content Type')
 
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig5, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -346,7 +346,7 @@ fig6 = px.line(
 )
 fig6 = update_fig_style(fig6, 'Growth Over Time (Domestic vs International)')
 
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig6, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -362,7 +362,7 @@ fig7 = px.bar(
 )
 fig7 = update_fig_style(fig7, 'Rating Distribution by Origin')
 
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig7, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -412,7 +412,7 @@ fig.update_layout(
     showlegend=True
 )
 
-st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
+# st.markdown("<div class='chart-wrap'>", unsafe_allow_html=True)
 st.plotly_chart(fig, use_container_width=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
