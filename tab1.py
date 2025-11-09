@@ -36,6 +36,10 @@ st.markdown("""
 # 	font-weight: 700 !important;
 # }
 
+h1{
+	color: #E50914
+}
+
 /* --- METAMORPHIC GLOW CARD --- */
 .glow-card {
 	background: var(--card-bg);
@@ -76,21 +80,25 @@ st.markdown("""
 	padding: 14px;
 	border-radius: 8px;
 	background-color: var(--card-bg);
-	width: 100% !important; /* Adjusted width */
+	width: 50%;
+	height: 100%;
+	min-height: 430px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
 	color: white; /* Text color */
 }
 /* Ensure text inside info-box's b tags is also white */
 .info-box b {
 	color: white !important;
+	
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 # Centering the main title using HTML markdown and increasing font size to approx 1.5x of default H1
-st.markdown("<h1 style='text-align: center; font-size: 3.75rem;'>Netflix Analysis Dashboard</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #E50914; font-size: 3.75rem;'>Netflix Analysis Dashboard</h1>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # CARD WRAPPERS
@@ -109,9 +117,12 @@ def update_fig_style(fig, title):
 		plot_bgcolor='black',
 		paper_bgcolor='black',
 		font=dict(family='Times New Roman', color='white', size=14),
-		title=dict(text=title, x=0.5, font=dict(color="#E50914")),
+		title=dict(text=title, x=0.5,xanchor='center', font=dict(color="#E50914")),
 		xaxis=dict(showgrid=True, gridcolor='#333333', linecolor='white'),
 		yaxis=dict(showgrid=True, gridcolor='#333333', linecolor='white'),
+		# Add margins so charts are visually shifted right (appears more centered in the column)
+		margin=dict(l=80, r=20),
+		# legend=dict(x=0.5, xanchor='center', orientation='h', yanchor='bottom', y=-0.15),
 	)
 	return fig
 
@@ -170,9 +181,10 @@ try:
 		fig1.update_layout(
 			plot_bgcolor='black',
 			paper_bgcolor='black',
-			title=dict(text='Content Distribution (Top 10 + Others)', x=0.5, font=dict(color="#E50914")),
+			title=dict(text='Content Distribution (Top 10 + Others)', x=0.5, font=dict(color="#E50914"), xanchor='center'),
 			font=dict(color='white'),
-			margin=dict(t=30, b=0, l=0, r=0),
+			# add left margin so pie chart sits a bit to the right (more centered visually)
+			margin=dict(t=30, b=0, l=80, r=20),
 			legend=dict(font=dict(color='white'))
 		)
 
@@ -184,9 +196,11 @@ try:
 		# KPI Box
 		st.markdown(f"""
 		<div class="info-box">
-		<b>Key KPIs:</b><br>
-		• <b>Top Country ({top_country_name}):</b> {top_country_pct:.1f}% of content.<br>
-		• <b>All Other Countries:</b> {others_pct:.1f}% of content.<br>
+		<b style='font-size: 1.5rem; margin-bottom : 5px';>Key Statistics:</b><br>
+		<div style='height: 300px; display: flex; flex-direction: column; justify-content: space-evenly;'>
+		<b style='font-size: 1.5rem;'>• Top Country ({top_country_name}):</b> {top_country_pct:.1f}% of content.<br>
+		<b style='font-size: 1.5rem;'>• All Other Countries:</b> 64.7% of content.<br>
+  		</div>
 		</div>
 		""", unsafe_allow_html=True)
 
@@ -280,10 +294,12 @@ try:
 		# KPI Box
 		st.markdown(f"""
 		<div class="info-box">
-		<b>Key KPIs (All Years):</b><br>
-		• <b>Average Movie Lag:</b> {avg_lag_movie:.0f} days.<br>
-		• <b>Average TV Show Lag:</b> {avg_lag_tv:.0f} days.<br>
-		• <b>Insight:</b> TV Shows are added, on average, <b>{lag_diff:.0f} days faster</b> than movies.
+		<b style='font-size: 1.5rem; margin-bottom: 5px;'>Key Statistics (All Years):</b><br>
+		<div style='height: 300px; display: flex; flex-direction: column; justify-content: space-evenly;'>
+		<b style='font-size: 1.25rem;'>• Average Movie Lag:</b> {avg_lag_movie:.0f} days.<br>
+		<b style='font-size: 1.25rem;'>• Average TV Show Lag:</b> {avg_lag_tv:.0f} days.<br>
+		<b style='font-size: 1.25rem;'>• Insight:</b> TV Shows are added, on average, <b>{lag_diff:.0f} days faster</b> than movies.
+		</div>
 		</div>
 		""", unsafe_allow_html=True)
 	end_card()
@@ -354,10 +370,12 @@ try:
 		# KPI Box
 		st.markdown(f"""
 		<div class="info-box">
-		<b>Key KPIs (Since 2005):</b><br>
-		• <b>Avg. Movie Growth (YoY):</b> {avg_growth_movie:.1f} titles/year.<br>
-		• <b>Avg. TV Show Growth (YoY):</b> {avg_growth_tv:.1f} titles/year.<br>
-		• <b>Insight:</b> TV Show growth outpaces movies by <b>{growth_diff:.1f} titles</b> per year on average.
+		<b style='font-size: 1.5rem; margin-bottom: 5px;'>Key Statistics (Since 2005):</b><br>
+		<div style='height: 300px; display: flex; flex-direction: column; justify-content: space-evenly;'>
+		<b style='font-size: 1.25rem;'>• Avg. Movie Growth (YoY):</b> {avg_growth_movie:.1f} titles/year.<br>
+		<b style='font-size: 1.25rem;'>• Avg. TV Show Growth (YoY):</b> {avg_growth_tv:.1f} titles/year.<br>
+		<b style='font-size: 1.25rem;'>• Insight:</b> TV Show growth outpaces movies by <b>{growth_diff:.1f} titles</b> per year on average.
+		</div>
 		</div>
 		""", unsafe_allow_html=True)
 	end_card()

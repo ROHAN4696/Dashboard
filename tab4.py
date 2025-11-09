@@ -18,11 +18,17 @@ custom_css = """
     background: #0c0c0c;
     padding: 18px;
     border-radius: 12px;
-    box-shadow:
-        inset 0 0 15px rgba(255,255,255,0.05),
-        0 0 20px rgba(229, 9, 20, 0.25),
-        0 0 35px rgba(229, 9, 20, 0.35),
-        0 0 55px rgba(229, 9, 20, 0.45);
+}
+
+/* Add underline to all headings */
+h1, h2, h3, h4, h5, h6 {
+    # border-bottom: 1px solid #333333;
+    padding-bottom: 15px;
+    # text-align: center;
+}
+.h2{
+    border-left: 5px solid {"#E50914"};
+    padding-left: 15px;
 }
 
 /* Glow containers for whole section */
@@ -67,7 +73,7 @@ custom_css = """
 
 /* Custom Red Header styling inside the special red div */
 .red-header-div h2 {
-    color: white !important; /* Make text white inside the red box */
+    color: #E50914 !important; /* Make text white inside the red box */
     text-shadow: none !important; /* Remove text glow for better contrast */
 }
 
@@ -104,14 +110,14 @@ except:
 # -----------------------------
 def update_fig_style(fig, title):
     fig.update_layout(
-        plot_bgcolor='#111111',
-        paper_bgcolor='#111111',
+        plot_bgcolor='black',
+        paper_bgcolor='black',
         font=dict(family='Times New Roman', color='white', size=14),
         title=dict(text=title, font=dict(color="#E50914")),
         xaxis=dict(showgrid=True, gridcolor='grey', linecolor='white', tickfont=dict(color='white')),
         yaxis=dict(showgrid=True, gridcolor='grey', linecolor='white', tickfont=dict(color='white')),
         legend=dict(font=dict(color='white'), bgcolor='#111111', bordercolor='#333333'),
-        geo_bgcolor='#111111',
+        geo_bgcolor='black',
         margin=dict(t=50, b=50)
     )
     return fig
@@ -166,7 +172,7 @@ df_pre_origin = df_pre_origin.dropna(subset=['content_origin'])
 # -----------------------------
 st.markdown(
     """
-    <div class='red-header-div' style='background-color: #E50914; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
+    <div class='red-header-div' style='background-color: transparent; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
         <h2>Content Distribution by Type Across the Globe</h2>
     </div>
     """,
@@ -210,7 +216,7 @@ st.markdown("---")
 # -----------------------------
 st.markdown(
     """
-    <div class='red-header-div' style='background-color: #E50914; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
+    <div class='red-header-div' style='background-color: transparent; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
         <h2>Netflix Content Distribution Map (Movies vs TV Shows + Top Genre)</h2>
     </div>
     """,
@@ -291,7 +297,7 @@ st.markdown("---")
 # -----------------------------
 st.markdown(
     """
-    <div class='red-header-div' style='background-color: #E50914; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
+    <div class='red-header-div' style='background-color: transparent; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 20px;'>
         <h2>International vs. Domestic Content Analysis</h2>
     </div>
     """,

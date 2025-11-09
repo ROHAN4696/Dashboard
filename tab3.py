@@ -36,15 +36,21 @@ h1, h2, h3, h4, h5, .st-emotion-cache-10trblm { /* Targets titles and headers */
     font-weight: 700 !important;
 }
 
-/* --- CHART WRAPPER GLOW --- */
+/* --- CHART WRAPPER --- */
 div.stPlotlyChart {
-    /* Override standard chart styling with glow effect */
+    /* Override standard chart styling */
     border: none;
     padding: 0;
     margin-bottom: 25px;
     background: #0c0c0c;
     border-radius: 12px;
-    box-shadow: 0 0 22px rgba(229, 9, 20, 0.4);
+}
+
+/* Add underline to all headings */
+h1, h2, h3, h4, h5, h6 {
+    border-bottom: 1px solid #333333;
+    padding-bottom: 15px;
+    text-align: center;
 }
 
 /* Ensuring sidebar background is visible against the light grey app background */

@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 st.markdown("""
     <style>
         /* FIX: Ensure titles and headings are red and centered using !important */
-        h1, h2, h3, h4, h5, h6 {
+        h1, h2, h4, h5, h6 {
             text-align: center;
             color: #FF0000 !important; /* Enforce Red color */
         }
@@ -22,6 +22,24 @@ st.markdown("""
             padding-top: 2rem;
             max-width: 100%;
             margin-top:0rem;
+        }
+
+        /* Style for all headings except Netflix Dataset Viewer */
+        h3, h4, h5, h6 {
+            width: 100% !important;
+            text-align: center !important;
+            border-bottom: 1px solid #333333;
+            padding-bottom: 15px;
+        }
+
+        /* Style specifically for Netflix Dataset Viewer */
+        h1 {
+            text-align: center !important;
+        }
+        
+        /* Style for plotly charts */
+        .js-plotly-plot {
+            background-color: black !important;
         }
 
         /* Style for the Data Preview container (st.dataframe) with rounded corners */
@@ -231,5 +249,5 @@ if st.session_state[WIDGET_KEYS["director"]] != "All":
     filtered_df = filtered_df[filtered_df['director'].astype(str).str.contains(director_filter, case=False, na=False)]
 
 # --- Show results ---
-st.markdown(f"###  Filtered Results ({len(filtered_df)} records)")
+st.markdown(f"###  Results ({len(filtered_df)} records)")
 st.dataframe(filtered_df.reset_index(drop=True))

@@ -89,7 +89,7 @@ def update_plot_layout_dark(fig, title_text):
     fig.update_layout(
         title={'text': title_text, 'x': 0.5, 'xanchor': 'center', 'font': {'color': NETFLIX_RED, 'size': 20}},
         height=600,
-        plot_bgcolor=DARK_CARD,  # Dark background for the plotting area
+        plot_bgcolor='black',  # Dark background for the plotting area
         paper_bgcolor=DARK_BACKGROUND,  # Dark background for the entire figure
         font={'color': DARK_TEXT},  # Light text color
         xaxis={'tickangle': -45, 'gridcolor': DARK_BORDER, 'zerolinecolor': DARK_BORDER},
@@ -311,7 +311,7 @@ st.markdown(f"""
             font-size: 2rem;
             margin-top: 2rem;
             margin-bottom: 1.5rem;
-            border-left: 5px solid {NETFLIX_RED};
+            # border-left: 5px solid {NETFLIX_RED};
             padding-left: 15px;
         }}
         h3 {{

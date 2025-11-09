@@ -60,12 +60,24 @@ st.markdown("""
 #         0 0 85px rgba(229, 9, 20, 0.9);
 # }
 
-/* Chart container glow */
+/* Chart container */
 .chart-wrap {
     background: #0c0c0c;
     padding: 18px;
     border-radius: 12px;
-    box-shadow: 0 0 22px rgba(229, 9, 20, 0.4);
+}
+
+/* Remove padding from containers */
+div[data-testid="stVerticalBlock"] > div {
+    padding-left: 0 !important;
+}
+
+/* Add styling to all headings */
+h1, h2, h3, h4, h5, h6 {
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+    margin-left: 0;
 }
 
 </style>

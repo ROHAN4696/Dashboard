@@ -23,7 +23,7 @@ html, body, [data-testid="stAppViewContainer"], .main {{
 /* Main Title (Netflix Red with a SIGNIFICANT White Glow) */
 h1 {{
     color: #E50914; /* Netflix Red */
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 5px #E50914; /* White glow + subtle red core */
+    # text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 5px #E50914; /* White glow + subtle red core */
     text-align: center;
     font-weight: 900;
     padding-bottom: 25px;
@@ -34,7 +34,7 @@ h1 {{
 /* Sub-headers for sections (Pure White with SIGNIFICANT glow) */
 h2 {{
     color: #FFFFFF; /* Pure White */
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); /* Significant white glow */
+    # text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); /* Significant white glow */
     font-weight: 700;
     border-bottom: 1px solid #333333; /* Darker border */
     padding-bottom: 15px;
@@ -45,9 +45,9 @@ h2 {{
 .strategy-card {{
     background-color: #212121; /* Card background, slightly lighter than page */
     /* Metamorphic shadows: top/left for highlight, bottom/right for depth */
-    box-shadow: 
-        -5px -5px 10px rgba(40, 40, 40, 0.9), /* Darker top/left shadow (simulating recess) */
-        5px 5px 10px rgba(0, 0, 0, 0.7); /* Deep black bottom/right shadow (simulating extrusion) */
+    # box-shadow: 
+    #     -5px -5px 10px rgba(40, 40, 40, 0.9), /* Darker top/left shadow (simulating recess) */
+    #     5px 5px 10px rgba(0, 0, 0, 0.7); /* Deep black bottom/right shadow (simulating extrusion) */
     border-radius: 12px; /* Slightly more rounded corners */
     padding: 24px;
     height: 380px; /* Fixed height maintained */
@@ -58,9 +58,9 @@ h2 {{
 
 .strategy-card:hover {{
     transform: translateY(-3px); /* Subtle lift on hover */
-    box-shadow: 
-        -8px -8px 15px rgba(45, 45, 45, 0.9),
-        8px 8px 15px rgba(0, 0, 0, 0.8);
+    # box-shadow: 
+    #     -8px -8px 15px rgba(45, 45, 45, 0.9),
+    #     8px 8px 15px rgba(0, 0, 0, 0.8);
 }}
 
 /* Strategy Title (inside the card - Kept Red) */
@@ -85,10 +85,10 @@ h2 {{
 /* --- Prominent Corporate Card Style (Metamorphic + Accent) --- */
 .corporate-card {{
     background-color: #212121; /* Card background, same as strategy card */
-    border: 1px solid #E50914; /* Red border maintained */
-    box-shadow: 
-        -5px -5px 15px rgba(229, 9, 20, 0.1), /* Subtle Red Highlight */
-        5px 5px 15px rgba(0, 0, 0, 0.8); /* Deep Black Shadow */
+    border: 1px solid none; /* Red border maintained */
+    # box-shadow: 
+    #     -5px -5px 15px rgba(229, 9, 20, 0.1), /* Subtle Red Highlight */
+    #     5px 5px 15px rgba(0, 0, 0, 0.8); /* Deep Black Shadow */
     border-radius: 12px;
     padding: 24px;
     height: 300px; /* Fixed height maintained */
@@ -99,9 +99,9 @@ h2 {{
 
 .corporate-card:hover {{
     transform: translateY(-5px); /* Stronger lift for corporate focus */
-    box-shadow: 
-        0 0 30px rgba(229, 9, 20, 0.4), /* Intense Red Glow on hover */
-        0 0 20px rgba(0, 0, 0, 1);
+    # box-shadow: 
+    #     0 0 30px rgba(229, 9, 20, 0.4), /* Intense Red Glow on hover */
+    #     0 0 20px rgba(0, 0, 0, 1);
 }}
 
 /* Corporate Title (inside the card - Kept Red) */
@@ -129,7 +129,7 @@ st.markdown(netflix_theme_css, unsafe_allow_html=True)
 # --- Dashboard Content ---
 
 # 1. Main Title
-st.markdown("<h1 style='color:white; font-weight:900; text-align:center; padding-top:20px; padding-bottom:20px;'>Strategic Recommendations</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#E50914; font-weight:900; text-align:center; padding-top:20px; padding-bottom:20px;'>Strategic Recommendations</h1>", unsafe_allow_html=True)
 
 # --- SECTION 1: Market & Retention Strategies (4 Cards) ---
 st.markdown("<h2 style='color:white; font-weight:900; margin-top:40px;'>Market & Retention Strategies</h2>", unsafe_allow_html=True)
